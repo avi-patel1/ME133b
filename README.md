@@ -1,3 +1,3 @@
-# ME133b 
+### ME133b Final Project - Ghost path planner for Pac-Man
 
 Final project for Caltech ME/CS 133b Robotics course where we developed various planning algorithms for the ghosts to chase and capture Pac-Man. In the first approach, we sequentially planned each ghost's path using A*. In the second approach, we create a region planner which using breadth-first search to identify potential locations where Pac-Man could arrive for the ghosts to target. In the last approach, we create a multi-dimensional planner where each node in our graph contains the coordinates of all ghosts. We evaluated the performance of each approach and examined the trade-offs between them in our final report and video.
