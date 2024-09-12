@@ -16,7 +16,7 @@ random.seed(133)
 
 
 TILE_SIZE = 32
-WINDOW_SIZE = 672  # 640
+WINDOW_SIZE = 672 
 
 PRED_MOVE = [4, 4, 4, 4, 4, 4, 4, 4, 2,
              2, 2, 2, 3, 3, 3, 3, 3, 2, 
@@ -27,28 +27,6 @@ PRED_MOVE = [4, 4, 4, 4, 4, 4, 4, 4, 2,
              2, 2, 1, 1, 1, 3, 3, 3, 1,
              3, 3, 3, 1, 1, 3, 3, 1, 1,
              1]
-
-# GRID =  ['#####################',         
-#          '#         #         #',
-#          '# ## #### # #### ## #', 
-#          '#                   #',
-#          '# ## #### # #### ## #',
-#          '#         #         #',
-#          '#     # #   # #     #',
-#          '# # ### #   # ### # #',
-#          '# #               # #',
-#          '# # # #       # # # #',
-#          '#     #       #     #',
-#          '#     #       #     #',
-#          '#     ###   ###     #',
-#          '#                   #',
-#          '#                   #',
-#          '#                   #',
-#          '#                   #',
-#          '#                   #',
-#          '#                   #',
-#          '#                   #',
-#          '#####################']
 
 GRID =  ['#####################',
          '#         #         #',
@@ -93,9 +71,6 @@ class Node:
         # Clear the list of neighbors (used for the full graph).
         self.neighbors = []
 
-        # Clear the parent (used for the search tree), as well as the
-        # actual cost to reach (via the parent).
-        # FIXME: You may want to add further information as needed here.
         self.parent = None      # No parent
         self.cost   = inf       # Unable to reach = infinite cost
 
@@ -141,28 +116,11 @@ class Ghost(pygame.sprite.Sprite):
         self.pos = pygame.math.Vector2(self.rect.topleft)
         self.moving = False
 
-        #self.last_path = [] # When the planner fails, use a clean path
-                
-        #self.node_grid = node_grid
-
-        #self.node_grid = node_grid ## node grid for ghost to travel through
-        #print(pos[0]//TILE_SIZE_x, pos[1]//TILE_SIZE_y)
-        #self.start_node = self.node_grid[int(pos[0]//TILE_SIZE_x)][int(pos[1]//TILE_SIZE_y)]
-       #print('start', self.start_node)
-
-        #self.pacMan_p0 = pacman_pos
-        #self.goal_node = self.node_grid[int(pacman_pos[0]//TILE_SIZE_x)][int(pacman_pos[1]//TILE_SIZE_y)]
-
-        #print('(start, goal)', self.start_node, self.goal_node)
-
         self.t0 = time.time()
         self.speed = 32
 
-        #print("start,goal: ", self.start_node, self.goal_node, self.t0)
-        self.path = [] # get_path() # path the ghost takes to reach PacMan 
+        self.path = [] # path the ghost takes to reach PacMan 
         self.last_path = []
-        #print("path", self.path)
-        #print("initial path: ",  self.path)
 
     
     def __lt__(self, other):
@@ -211,8 +169,6 @@ class Ghost(pygame.sprite.Sprite):
 
                 if n.seen == False:
                     n.parent = node
-
-
                     n.actual_cost  = n.parent.actual_cost + 1
                     const = 1 # change to adjust level of agressiveness
                     n.cost = n.actual_cost + (const * goal.distance(n) ) 
@@ -238,11 +194,6 @@ class Ghost(pygame.sprite.Sprite):
 
     def move(self, nextPos, dt):
 
-        # for i in paths;
-        #self.rect.move_ip(-5,0)
-        #print(type(self.rect))
-        #pygame.Rect.move_ip(self.rect,nextPos[0]-self.p0[0],nextPos[1]-self.p0[1])
-        #print('coords:', self.rect.topleft)
         self.pos = self.pos.move_towards(nextPos, self.speed*dt)
             
         # Will only stop moving once the position reaches the destination
@@ -254,8 +205,6 @@ class Ghost(pygame.sprite.Sprite):
 
     def get_path(self):
         ''' retrieves node path using A* algorithm'''
-
-        #self.path = self.planner(self.rect.topleft, pacPos)
         self.path = self.planner(self.start_node, self.goal_node)
 
 
@@ -304,10 +253,7 @@ class Player(pygame.sprite.Sprite):
             self.direction = dir_orig
 
     def get_predertermined(self, move: int):
-        # keys = pygame.key.get_pressed()
         
-        # # The elifs prevent the player from walking in diagonal. Generally games like
-        # # Pokémon do not allow that kind of movement, and that's what we're replicating here
         dir_orig = self.direction
         if move == 1:
             self.direction = self.pos + pygame.math.Vector2(0, -TILE_SIZE_y)
@@ -346,15 +292,6 @@ class Player(pygame.sprite.Sprite):
         self.rect.center = self.pos
 
     def update(self, dt):
-        # The player does not respond to input until it reaches the tile destination
-        # That is the key to the Grid-Based movement here. If it could respond, then it would walk all over the place
-        # if not self.moving:
-        #     if self.moves_count < len(PRED_MOVE):
-        #         self.get_predertermined(PRED_MOVE[self.moves_count])
-        #         self.moves_count+=1
-        #     else:
-        #         self.get_input()
-        
         # Player keeps moving even without input
         self.get_input()
         self.move(dt)
@@ -481,7 +418,6 @@ class World:
 
         for n in path:
             self.node_grid[n.row][n.col] = 0
-        #self.visualize_nodeGrid()
 
         flattened_nodes = self.node_grid.flatten()
         flattened_nodes = flattened_nodes[np.where(flattened_nodes != 0)]
@@ -493,7 +429,6 @@ class World:
                         if (n.row,n.col) == (node.row+dr,node.col+dc)]
                 if len(others) > 0:
                     node.neighbors.append(others[0])
-        # self.visualize_nodeGrid()
                     
     
 
@@ -538,7 +473,6 @@ class World:
             self.exclude_path_nodes(sort_dist[0][2].path[1:])
 
             # Second Closest
-            #self.initialize_nodes()
             sort_dist[1][2].start_node = self.node_grid[int(sort_dist[1][1][0]//TILE_SIZE_x)][int(sort_dist[1][1][1]//TILE_SIZE_y)]
             sort_dist[1][2].goal_node = self.node_grid[int(pacPos[0]//TILE_SIZE_x)][int(pacPos[1]//TILE_SIZE_y)]
             if sort_dist[1][2].start_node:
@@ -554,7 +488,6 @@ class World:
             self.exclude_path_nodes(sort_dist[1][2].path[1:])
 
             # Third Closest
-            #self.initialize_nodes() 
             sort_dist[2][2].start_node = self.node_grid[int(sort_dist[2][1][0]//TILE_SIZE_x)][int(sort_dist[2][1][1]//TILE_SIZE_y)]
             sort_dist[2][2].goal_node = self.node_grid[int(pacPos[0]//TILE_SIZE_x)][int(pacPos[1]//TILE_SIZE_y)]
             if sort_dist[2][2].start_node:
@@ -571,7 +504,6 @@ class World:
             self.exclude_path_nodes(sort_dist[2][2].path[1:])
 
             # Fourth Closest
-            #self.initialize_nodes()            
             sort_dist[3][2].start_node = self.node_grid[int(sort_dist[3][1][0]//TILE_SIZE_x)][int(sort_dist[3][1][1]//TILE_SIZE_y)]
             sort_dist[3][2].goal_node = self.node_grid[int(pacPos[0]//TILE_SIZE_x)][int(pacPos[1]//TILE_SIZE_y)]
             if sort_dist[2][2].start_node:
@@ -585,9 +517,7 @@ class World:
             
         for ghost in [self.ghost1, self.ghost2, self.ghost3, self.ghost4]:
             if len(ghost.path) >= 1:
-                # print(ghost.path)
                 while (len(ghost.path) > 0 and ghost.rect.topleft == ghost.path[-1].get_position()):
-                    # print(ghost.path) 
                     ghost.path.pop()
                 if len(ghost.path) >= 1:   
                     ghost.move(ghost.path[-1].get_position(), dt)
@@ -597,20 +527,13 @@ class World:
     def update(self, dt):
         display = pygame.display.get_surface()
         self.player.update(dt)
-        #print(self.player.sprite.rect.topleft)
         self.player.draw(display)
-
 
         pacPos = self.player.sprite.rect.topleft
         self.updateGhosts(pacPos, dt)
-        #self.ghost1.update(self.player.sprite.rect.topleft, dt) # update the goal node position for ghost 
         self.g1.draw(display)
-
-        #self.ghost2.update(self.player.sprite.rect.topleft, dt) # update the goal node position for ghost 
         self.g2.draw(display)
-
         self.g3.draw(display)
-
         self.g4.draw(display)
 
 

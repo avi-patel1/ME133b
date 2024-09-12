@@ -123,9 +123,7 @@ class Ghost(pygame.sprite.Sprite):
         path = []
         # Continually expand/build the search tree.
 
-        #print("Starting the processing...")
         while True:
-            #print(onDeck)
             # Show the grid.
             if show:
                 show()
@@ -206,9 +204,6 @@ class Player(pygame.sprite.Sprite):
 
     def get_input(self):
         keys = pygame.key.get_pressed()
-        
-        # The elifs prevent the player from walking in diagonal. Generally games like
-        # Pokémon do not allow that kind of movement, and that's what we're replicating here
         dir_orig = self.direction
         if keys[pygame.K_UP]:
             self.direction = self.pos + pygame.math.Vector2(0, -TILE_SIZE_y)
@@ -260,16 +255,16 @@ class World:
     """
     def __init__(self):
 
-        (prow, pcol) = 14,17 #12,5 #1,1 # initial position of PacMan (row, col)
+        (prow, pcol) = 14,17 # initial position of PacMan (row, col)
         pacman_pos = (TILE_SIZE_x*prow,TILE_SIZE_y*pcol)
         
-        g1row, g1col = 5,10 #1,8 # 16,5   # initial ghost1 position (row, col)
+        g1row, g1col = 5,10  # initial ghost1 position (row, col)
         g1_pos = (TILE_SIZE_x*g1row,TILE_SIZE_y*g1col)
 
-        g2row, g2col = 3,10 #5,19  # 18,18  # initial ghost2 position (row, col)
+        g2row, g2col = 3,10  # initial ghost2 position (row, col)
         g2_pos = (TILE_SIZE_x*g2row,TILE_SIZE_y*g2col)
 
-        g3row, g3col = 7,10 # 16,1  # initial ghost3 position (row, col)
+        g3row, g3col = 7,10  # initial ghost3 position (row, col)
         g3_pos = (TILE_SIZE_x*g3row,TILE_SIZE_y*g3col)
         
         g4row, g4col = 16,14  # initial ghost3 position (row, col)
@@ -343,7 +338,6 @@ class World:
                     self.node_grid[row][col] = 0
                 else:
                     self.node_grid[row][col] = Node(row, col)
-                    #nodes.append(Node(row, col))
 
         # Create the neighbors, being the edges between the nodes.
         flattened_nodes = self.node_grid.flatten()
@@ -361,7 +355,6 @@ class World:
     def exclude_path_nodes(self, path):
         ''' reinitialize the grid of nodes but exclude the path nodes from ghost for the others'''
 
-        #self.initialize_nodes()
         self.node_grid = np.zeros((ROWS, COLS), dtype='object')   ## node grid for ghost 
         for row in range(ROWS):
             for col in range(COLS):
@@ -373,7 +366,6 @@ class World:
 
         for n in path:
             self.node_grid[n.row][n.col] = 0
-        #self.visualize_nodeGrid()
 
         flattened_nodes = self.node_grid.flatten()
         flattened_nodes = flattened_nodes[np.where(flattened_nodes != 0)]
@@ -385,7 +377,6 @@ class World:
                         if (n.row,n.col) == (node.row+dr,node.col+dc)]
                 if len(others) > 0:
                     node.neighbors.append(others[0])
-        # self.visualize_nodeGrid()
                     
     def view_path(self, paths):
         """ Helper function to view paths of each ghost to goal
@@ -409,9 +400,6 @@ class World:
     def updateGhosts(self, pacPos, dt):
         # The player does not respond to input until it reaches the tile destination
         # That is the key to the Grid-Based movement here. If it could respond, then it would walk all over the place
-        # if not self.moving:
-        #     self.get_input()
-       
 
         if (len(self.ghost1.path) == 0 and len(self.ghost2.path) == 0 and len(self.ghost3.path) == 0) or np.abs(self.t % 1 - 0) < 1e-2:
 
